@@ -7,10 +7,11 @@ import numpy as np
 
 class Methods:
 
-    def __init__(self, func, error=0.00001, it=50):
+    def __init__(self, func, rd, error=0.00001, it=50):
         self.func = func
         self.error = error
         self.it = it
+        self.round = rd
 
         self.bis_root = none
         self.bis_it = 0
@@ -35,9 +36,9 @@ class Methods:
         prev = 0
         f = lambdify(x, self.func)
         for i in range(1, self.it):
-            xr = (xu + xl) / 2
-            fr = f(xr)
-            fl = f(xl)
+            xr = round((xu + xl) / 2, self.round)
+            fr = round(f(xr), self.round)
+            fl = round(f(xl), self.round)
             # update
             if fr * fl < 0:
                 xu = xr
@@ -70,10 +71,10 @@ class Methods:
         f = lambdify(x, self.func)
 
         for i in range(1, self.it):
-            fl = f(xl)
-            fxu = f(xu)
-            xr = ((xl * fxu) - (xu * fl)) / (fxu - fl)
-            fr = f(xr)
+            fl = round(f(xl), self.round)
+            fxu = round(f(xu), self.round)
+            xr = round(((xl * fxu) - (xu * fl)) / (fxu - fl), self.round)
+            fr = round(f(xr), self.round)
             if fr < 0:
                 xl = xr
             if fr > 0:
@@ -101,7 +102,7 @@ class Methods:
         prev = guess
         for i in range(1, self.it):
             gx = gx.replace("x", "Xr")
-            Xr = eval(gx)
+            Xr = round(eval(gx), self.round)
             fixed_error = abs(Xr - prev)
             print("i=", i, "xr=", Xr, "prev=", prev, "error=", fixed_error)
             prev = Xr
@@ -113,7 +114,7 @@ class Methods:
         end = timeit.default_timer()
         self.fixed_time = (end - start)
 
-    def newton_raphson(self, guess):
+    def newton_raphson(self, guess, n_mod=1):
         start = timeit.default_timer()
         i = None
         xr = guess
@@ -121,39 +122,56 @@ class Methods:
         # x (sympy.abc)
         fx = lambdify(x, self.func)
         fdx = diff(self.func, x)
+        fddx = diff(fdx, x)
         fdx = lambdify(x, fdx)
+        fddx = lambdify(x, fddx)
         for i in range(1, self.it):
-            numerator = fx(xr)
-            denominator = fdx(xr)
-            xr = xr - numerator / denominator
-            newton_error = abs(xr - prev / xr)
-            print("i=", i, "xr=", xr, "fx=", numerator, "fdx=", denominator, "prev=", prev, "error=", newton_error)
-            if newton_error < self.error:
-                break
-            prev = xr
+            if n_mod != 0:
+                numerator = round(fx(xr), self.round)
+                denominator = round(fdx(xr), self.round)
+                xr = round(xr - n_mod * (numerator / denominator), self.round)
+                newton_error = abs(xr - prev)
+                print("i=", i, "x=", prev, "fx=", numerator, "fdx=", denominator, "xr=", xr, "error=", newton_error)
+                if newton_error < self.error:
+                    break
+                prev = xr
+            elif n_mod == 0:
+                numerator = round(fx(xr) * fdx(xr), 5)
+                denominator = round(fdx(xr) ** 2 - fx(xr) * fddx(xr), 5)
+                xr = round(xr - (numerator / denominator), 5)
+                newton_error = abs(xr - prev)
+                print("i=", i, "x=", prev, "fx=", numerator, "fdx=", denominator, "xr=", xr, "error=", newton_error)
+                if newton_error < self.error:
+                    break
+                prev = xr
+
         self.newton_it = i
         self.newton_root = xr
         end = timeit.default_timer()
         self.newton_time = (end - start)
 
 
-func1 = "2 * x**3 - 2*x - 5"
-g = "np.cbrt( (2*x+5)/2 )"
+func1 = "x**3 -2*x**2-4*x+8"
+g = "6/(x**2-7*x+14)"
 x_l = 1
 x_u = 2
 it_ = 11
+error_ = 0.0001
+# rd rounding
+round_d = 5
+cl = Methods(func1, error=error_, rd=round_d)
+# cl.bisection(1, 2)
+# print(
+# "-------------------------------------------------------------------------------------------------------------------------------------")
+# cl.false_position(1, 2)
+# print(
+#    "-------------------------------------------------------------------------------------------------------------------------------------")
 
-error_ = 0.00001
-cl = Methods(func1)
-cl.bisection(1, 2)
-print(
-    "-------------------------------------------------------------------------------------------------------------------------------------")
-cl.false_position(1, 2)
-print(
-    "-------------------------------------------------------------------------------------------------------------------------------------")
+# cl.fixed_point(g, 1.5)
+# print(
+#    "-------------------------------------------------------------------------------------------------------------------------------------")
 
-cl.fixed_point(g, 1.5)
-print(
-    "-------------------------------------------------------------------------------------------------------------------------------------")
-
-cl.newton_raphson(1.5)
+# n_mod= 0 second mod
+# n_mod= 1 normal default
+# n_mod=m first mod where m is the multiplicity of root
+cl.newton_raphson(1.2, 2)

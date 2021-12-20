@@ -201,8 +201,9 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem(val)
         self.tableWidget.setItem(i, j, item)
 
-    def getItem(self, i, j):
-        return self.tableWidget.item(i, j).text()
+    def setTime(self, text):
+        val = str(text)
+        self.timeText.setText(str(val))
 
     # _________________________________________________________________________________________________________________#
     def setupUi(self, MainWindow):
@@ -359,6 +360,22 @@ class Ui_MainWindow(object):
         self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
 
+        self.timeText = QtWidgets.QTextEdit(self.centralwidget)
+        self.timeText.setGeometry(QtCore.QRect(160, 880, 321, 41))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.timeText.setFont(font)
+        self.timeText.setReadOnly(True)
+        self.timeText.setObjectName("timeText")
+
+        self.label_time = QtWidgets.QLabel(self.centralwidget)
+        self.label_time.setGeometry(QtCore.QRect(50, 880, 121, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_time.setFont(font)
+        self.label_time.setObjectName("label_time")
+        self.label_time.setText("Time Taken")
+
         self.functionField_G = QtWidgets.QLineEdit(self.centralwidget)
         self.functionField_G.setGeometry(QtCore.QRect(190, 110, 431, 41))
         font = QtGui.QFont()
@@ -452,10 +469,6 @@ class Ui_MainWindow(object):
         self.label_tolerance.setText(_translate("MainWindow", "Tolerance:"))
         self.label_2.setText(_translate("MainWindow", "X (root) = "))
         self.tableWidget.setSortingEnabled(False)
-
-        # for i in range(50):
-        #     item = self.tableWidget.verticalHeaderItem(i)
-        #     item.setText(_translate("MainWindow", '%d' % i))
 
         self.textEdit.setHtml(_translate("MainWindow",
                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

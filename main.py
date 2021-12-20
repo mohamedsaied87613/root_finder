@@ -17,7 +17,6 @@ class Methods:
 
     def __init__(self, func, es, max_iterations, ui_interface):
         self.ui_interface = ui_interface
-        self.time = 0
         self.func = func
         self.max_iterations = max_iterations
         self.es = es
@@ -59,7 +58,7 @@ class Methods:
         self.root = xr
         # time
         end = timeit.default_timer()
-        self.time = (end - start)
+        self.ui_interface.setTime((end - start))
 
     def false_position(self, xl, xu):
         start = timeit.default_timer()
@@ -96,7 +95,7 @@ class Methods:
         self.root = xr
         # time
         end = timeit.default_timer()
-        self.time = (end - start)
+        self.ui_interface.setTime((end - start))
 
     def fixed_point(self, gx, xi):
         start = timeit.default_timer()
@@ -122,7 +121,7 @@ class Methods:
         self.root = xr
         # time
         end = timeit.default_timer()
-        self.time = (end - start)
+        self.ui_interface.setTime((end - start))
 
     def newton_raphson(self, xi):
         start = timeit.default_timer()
@@ -153,7 +152,7 @@ class Methods:
         self.root = xr
         # time
         end = timeit.default_timer()
-        self.time = (end - start)
+        self.ui_interface.setTime((end - start))
 
     def secant(self, xi, xj):
         start = timeit.default_timer()
@@ -185,4 +184,4 @@ class Methods:
         self.root = xr
         # time
         end = timeit.default_timer()
-        self.time = (end - start)
+        self.ui_interface.setTime((end - start))

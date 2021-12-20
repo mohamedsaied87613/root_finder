@@ -1,8 +1,5 @@
 from math import *
 import tkinter as tk
-
-import PyQt5
-import matplotlib.pyplot as plt
 from tkinter import ttk
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QHeaderView, QScrollBar, QTableWidgetItem
@@ -13,17 +10,6 @@ from main import Methods
 class Ui_MainWindow(object):
     text = ""
     gtext = ""
-
-    def convert_to_function(self, text, x):
-        return eval(text,
-                    {'__builtins__': {'cos': cos, "x": x, "sin": sin, "e": e, "tan": tan, "sqrt": sqrt, "pow": pow,
-                                      "log": log, "pi": pi, "fabs": fabs}}, None)
-
-    def f(self, x):
-        return self.convert_to_function(self.text, x)
-
-    def g(self, x):
-        return self.convert_to_function(self.gtext, x)
 
     def read_file(self):
         file = open("Numerical.txt", "r")

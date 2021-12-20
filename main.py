@@ -1,16 +1,9 @@
-import string
 from math import *
 import timeit
 from sympy import *
 from numpy.distutils.fcompiler import none
 from sympy.abc import x
 import numpy as np
-
-
-def convert_to_function(self, text, x):
-    return eval(text,
-                {'__builtins__': {'cos': cos, "x": x, "sin": sin, "e": e, "tan": tan, "sqrt": sqrt, "pow": pow,
-                                  "log": log, "pi": pi, "fabs": fabs}}, None)
 
 
 class Methods:

@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         self.text = self.functionField.text()
         self.gtext = self.functionField_G.text()
 
-        root = 0
+        root = None
 
         if method == "Bisection":
             xl = float(self.lineEdit_x_low.text())

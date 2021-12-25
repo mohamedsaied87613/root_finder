@@ -17,78 +17,99 @@ class Methods:
         self.root = None
 
     def bisection(self, xl, xu):
-        start = timeit.default_timer()
 
-        xr = 0
         f = lambdify(x, self.func)
 
-        for i in range(1, self.max_iterations + 1):
+        if f(xl) * f(xu) <= 0:
+            start = timeit.default_timer()
 
-            fl = f(xl)
-            xrold = xr
-            xr = (xu + xl) / 2
-            fr = f(xr)
+            xr = 0
+            for i in range(1, self.max_iterations + 1):
 
-            # update
-            if fr * fl < 0:
-                xu = xr
-            elif fr * fl > 0:
-                xl = xr
-            elif fr * fl == 0:
-                self.ea = 0
-                break
+                fl = f(xl)
+                xrold = xr
+                xr = (xu + xl) / 2
+                fr = f(xr)
 
-            self.ea = fabs(((xu - xl) / (xu + xl)) * 100)
+                # update
+                if fr * fl < 0:
+                    xu = xr
+                elif fr * fl > 0:
+                    xl = xr
+                elif fr * fl == 0:
+                    if fl == 0:
+                        xr = xl
+                    self.ea = 0
+                    self.ui_interface.setItem(xl, i, 0)
+                    self.ui_interface.setItem(xu, i, 1)
+                    self.ui_interface.setItem(xr, i, 2)
+                    self.ui_interface.setItem(self.ea, i, 3)
+                    break
 
-            self.ui_interface.setItem(xl, i, 0)
-            self.ui_interface.setItem(xu, i, 1)
-            self.ui_interface.setItem(xr, i, 2)
-            self.ui_interface.setItem(self.ea, i, 3)
+                self.ea = fabs(((xu - xl) / (xu + xl)) * 100)
 
-            if self.ea < self.es:
-                break
+                self.ui_interface.setItem(xl, i, 0)
+                self.ui_interface.setItem(xu, i, 1)
+                self.ui_interface.setItem(xr, i, 2)
+                self.ui_interface.setItem(self.ea, i, 3)
 
-        self.root = xr
-        # time
-        end = timeit.default_timer()
-        self.ui_interface.setTime((end - start))
+                if self.ea < self.es:
+                    break
+
+            self.root = xr
+            # time
+            end = timeit.default_timer()
+            self.ui_interface.setTime((end - start))
+
+        else:
+            self.ui_interface.alert_msg("No sign Change over the interval!")
 
     def false_position(self, xl, xu):
-        start = timeit.default_timer()
 
-        xr = 0
         f = lambdify(x, self.func)
 
-        for i in range(1, self.max_iterations + 1):
+        if f(xl) * f(xu) <= 0:
+            start = timeit.default_timer()
 
-            fl = f(xl)
-            fxu = f(xu)
-            xrold = xr
-            xr = ((xl * fxu) - (xu * fl)) / (fxu - fl)
-            fr = f(xr)
+            xr = 0
 
-            if fr < 0:
-                xl = xr
-            if fr > 0:
-                xu = xr
-            if fr == 0:
-                self.ea = 0
-                break
+            for i in range(1, self.max_iterations + 1):
 
-            self.ea = fabs(((xu - xl) / (xu + xl)) * 100)
+                fl = f(xl)
+                fxu = f(xu)
+                xrold = xr
+                xr = ((xl * fxu) - (xu * fl)) / (fxu - fl)
+                fr = f(xr)
 
-            self.ui_interface.setItem(xl, i, 0)
-            self.ui_interface.setItem(xu, i, 1)
-            self.ui_interface.setItem(xr, i, 2)
-            self.ui_interface.setItem(self.ea, i, 3)
+                if fr < 0:
+                    xl = xr
+                if fr > 0:
+                    xu = xr
+                if fr == 0:
+                    self.ea = 0
+                    self.ui_interface.setItem(xl, i, 0)
+                    self.ui_interface.setItem(xu, i, 1)
+                    self.ui_interface.setItem(xr, i, 2)
+                    self.ui_interface.setItem(self.ea, i, 3)
+                    break
 
-            if self.ea < self.es:
-                break
+                self.ea = fabs(((xu - xl) / (xu + xl)) * 100)
 
-        self.root = xr
-        # time
-        end = timeit.default_timer()
-        self.ui_interface.setTime((end - start))
+                self.ui_interface.setItem(xl, i, 0)
+                self.ui_interface.setItem(xu, i, 1)
+                self.ui_interface.setItem(xr, i, 2)
+                self.ui_interface.setItem(self.ea, i, 3)
+
+                if self.ea < self.es:
+                    break
+
+            self.root = xr
+            # time
+            end = timeit.default_timer()
+            self.ui_interface.setTime((end - start))
+
+        else:
+            self.ui_interface.alert_msg("No sign Change over the interval!")
 
     def fixed_point(self, gx, xi):
         start = timeit.default_timer()
